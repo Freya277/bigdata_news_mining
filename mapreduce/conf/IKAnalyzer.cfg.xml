@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>IK Analyzer Configuration</comment>
+    <entry key="ext_dict"></entry>
+    <entry key="ext_stopwords">cn_stopwords.txt</entry>
+</properties>

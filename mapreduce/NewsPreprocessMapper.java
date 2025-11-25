@@ -3,10 +3,13 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.wltea.analyzer.core.IKSegmenter;
+import org.wltea.analyzer.core.Lexeme;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,23 +47,28 @@ public class NewsPreprocessMapper extends Mapper<LongWritable, Text, Text, Text>
         String category = parts[0].trim();
         String content = parts[1].trim();
 
-        String cleanedContent = content.replaceAll("[^\\u4e00-\\u9fa5\\s]", "").trim();
+        String cleanedContent = content.replaceAll("[^\\u4e00-\\u9fa5]", "").trim();
         if (cleanedContent.isEmpty()) return;
 
-        String[] words = cleanedContent.split("\\s+");
-        StringBuilder sb = new StringBuilder();
-        for (String word : words) {
-            if (!stopWords.contains(word)) {
-                sb.append(word).append(" ");
+        StringReader reader = new StringReader(cleanedContent);
+        IKSegmenter ikSegmenter = new IKSegmenter(reader, true);
+        Lexeme lexeme;
+        StringBuilder segmentedContent = new StringBuilder();
+        
+        while ((lexeme = ikSegmenter.next()) != null) {
+            String word = lexeme.getLexemeText();
+            if (!stopWords.contains(word) && word.length() > 1) {
+                segmentedContent.append(word).append(" ");
             }
         }
-        cleanedContent = sb.toString().trim();
-        if (cleanedContent.isEmpty()) return;
+        
+        String finalContent = segmentedContent.toString().trim();
+        if (finalContent.isEmpty()) return;
 
-        int wordCount = cleanedContent.split("\\s+").length;
+        int wordCount = finalContent.split("\\s+").length;
 
         outKey.set(category);
-        outValue.set(cleanedContent + "\t" + wordCount);
+        outValue.set(finalContent + "\t" + wordCount);
 
         context.write(outKey, outValue);
     }
