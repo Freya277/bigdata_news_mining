@@ -5,7 +5,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -14,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NewsPreprocessMapper extends Mapper<LongWritable, Text, Text, Text> {
-
     private Text outKey = new Text();
     private Text outValue = new Text();
     private Set<String> stopWords = new HashSet<>();
@@ -47,16 +45,19 @@ public class NewsPreprocessMapper extends Mapper<LongWritable, Text, Text, Text>
         String category = parts[0].trim();
         String content = parts[1].trim();
 
+        // Remove all non-Chinese characters
         String cleanedContent = content.replaceAll("[^\\u4e00-\\u9fa5]", "").trim();
         if (cleanedContent.isEmpty()) return;
 
+        // Chinese word segmentation with IKAnalyzer
         StringReader reader = new StringReader(cleanedContent);
-        IKSegmenter ikSegmenter = new IKSegmenter(reader, true);
+        IKSegmenter ikSegmenter = new IKSegmenter(reader, true); // true for smart segmentation
         Lexeme lexeme;
         StringBuilder segmentedContent = new StringBuilder();
         
         while ((lexeme = ikSegmenter.next()) != null) {
             String word = lexeme.getLexemeText();
+            // Filter stopwords and single-character words
             if (!stopWords.contains(word) && word.length() > 1) {
                 segmentedContent.append(word).append(" ");
             }
@@ -65,6 +66,7 @@ public class NewsPreprocessMapper extends Mapper<LongWritable, Text, Text, Text>
         String finalContent = segmentedContent.toString().trim();
         if (finalContent.isEmpty()) return;
 
+        // Calculate word count
         int wordCount = finalContent.split("\\s+").length;
 
         outKey.set(category);
