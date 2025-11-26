@@ -32,20 +32,20 @@ public class SparkMain {
                 }
             );
             // Save as text file (key\tvalue)
-            influenceStrRDD.saveAsTextFile("/spark_output/author_influence");
+            influenceStrRDD.saveAsTextFile("hdfs://localhost:8020/spark_output/author_influence");
 
             // 2. Hot Category Analysis
             Dataset<Row> hotCategoryDF = HotCategoryAnalyzer.analyzeHotCategories(spark);
             hotCategoryDF.write()
                     .mode("overwrite")
                     .option("delimiter", "\t")
-                    .csv("/spark_output/hot_categories");
+                    .csv("hdfs://localhost:8020/spark_output/hot_categories");
 
             // 3. Headline TF-IDF Extraction
             Dataset<Row> tfidfDF = HeadlineTFIDF.extractTFIDF(spark);
             tfidfDF.write()
                     .mode("overwrite")
-                    .parquet("/spark_output/headline_tfidf");
+                    .parquet("hdfs://localhost:8020/spark_output/headline_tfidf");
 
             System.out.println("Spark analysis completed successfully!");
         } catch (Exception e) {

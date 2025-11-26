@@ -23,7 +23,7 @@ public class HotCategoryAnalyzer {
         Dataset<Row> newsDF = spark.read()
                 .option("delimiter", "\t")
                 .schema(newsSchema)
-                .csv("/news_cleaned/part-r-00000");
+                .csv("hdfs://localhost:8020/news_cleaned/part-r-00000");
 
         // Add headline length column
         Dataset<Row> newsWithLenDF = newsDF.withColumn("headline_len", functions.length(functions.col("headline")));

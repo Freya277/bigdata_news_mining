@@ -11,7 +11,7 @@ import scala.Tuple2;
 public class AuthorInfluenceAnalyzer {
     public static JavaPairRDD<String, Double> calculateInfluence(JavaSparkContext sc) {
         // Load data and filter invalid lines
-        JavaRDD<String> newsRDD = sc.textFile("/news_cleaned/part-r-00000");
+        JavaRDD<String> newsRDD = sc.textFile("hdfs://localhost:8020/news_cleaned/part-r-00000");
         JavaRDD<String> validNewsRDD = newsRDD.filter(new Function<String, Boolean>() {
             @Override
             public Boolean call(String line) throws Exception {

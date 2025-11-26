@@ -27,7 +27,7 @@ public class HeadlineTFIDF {
         Dataset<Row> newsDF = spark.read()
                 .option("delimiter", "\t")
                 .schema(newsSchema)
-                .csv("/news_cleaned/part-r-00000");
+                .csv("hdfs://localhost:8020/news_cleaned/part-r-00000");
 
         Dataset<Row> validHeadlineDF = newsDF.filter(
             functions.col("headline").isNotNull().and(functions.col("headline").notEqual(""))
