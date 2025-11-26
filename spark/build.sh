@@ -1,7 +1,13 @@
 #!/bin/bash
-# Reference: MapReduce build.sh in example
-mkdir -p build
-# Compile Scala code (reference Spark classpath command in example)
-scalac -cp $(hadoop classpath):$(spark-shell --classpath 2>/dev/null | grep -o '/.*jar' | tr '\n' ':') -d build src/*.scala
-# Package into jar
-jar -cvf news-spark.jar -C build .
+mkdir -p build/classes
+mkdir -p build/lib
+
+SPARK_HOME=/apps/spark
+HADOOP_HOME=/apps/hadoop
+
+javac -cp $(echo $SPARK_HOME/jars/*.jar | tr ' ' ':'):$(echo $HADOOP_HOME/share/hadoop/common/*.jar | tr ' ' ':'):$(echo $HADOOP_HOME/share/hadoop/hdfs/*.jar | tr ' ' ':'):$(echo $HADOOP_HOME/share/hadoop/mapreduce/*.jar | tr ' ' ':'):$(echo $HADOOP_HOME/share/hadoop/yarn/*.jar | tr ' ' ':') -d build/classes src/com/news/*.java
+
+jar -cvfm news-spark.jar MANIFEST.MF -C build/classes .
+
+cp news-spark.jar build/lib/
+echo "Build success! Jar file: build/lib/news-spark.jar"
