@@ -3,6 +3,7 @@ package com.news;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -20,12 +21,18 @@ public class SparkMain {
         try {
             // 1. Author Influence Analysis (return JavaPairRDD)
             JavaPairRDD<String, Double> authorInfluenceRDD = AuthorInfluenceAnalyzer.calculateInfluence(sc);
-            authorInfluenceRDD.map(new Tuple2<String, Double>() {
-                @Override
-                public String toString() {
-                    return _1 + "\t" + _2;
+            
+            // Fix: Use Function to convert Tuple2 to String (compatible with Spark 2.1.3)
+            JavaPairRDD<String, String> influenceStrRDD = authorInfluenceRDD.mapValues(
+                new Function<Double, String>() {
+                    @Override
+                    public String call(Double value) throws Exception {
+                        return value.toString();
+                    }
                 }
-            }).saveAsTextFile("/spark_output/author_influence");
+            );
+            // Save as text file (key\tvalue)
+            influenceStrRDD.saveAsTextFile("/spark_output/author_influence");
 
             // 2. Hot Category Analysis
             Dataset<Row> hotCategoryDF = HotCategoryAnalyzer.analyzeHotCategories(spark);
