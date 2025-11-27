@@ -3,12 +3,12 @@ mkdir -p build/classes
 mkdir -p build/lib
 
 HBASE_HOME=/apps/hbase
-SPARK_HOME=/apps/spark
 HADOOP_HOME=/apps/hadoop
+JAVA_HOME=/apps/java
 
-javac -cp $(echo $HBASE_HOME/lib/*.jar | tr ' ' ':'):$(echo $SPARK_HOME/jars/*.jar | tr ' ' ':'):$(echo $HADOOP_HOME/share/hadoop/common/*.jar | tr ' ' ':') -d build/classes src/com/news/*.java
+$JAVA_HOME/bin/javac -cp $(echo $HBASE_HOME/lib/*.jar | tr ' ' ':'):$(echo $HADOOP_HOME/share/hadoop/common/*.jar | tr ' ' ':'):$(echo $HADOOP_HOME/share/hadoop/hdfs/*.jar | tr ' ' ':') -d build/classes src/com/news/*.java
 
-jar -cvfm hbase-news.jar MANIFEST.MF -C build/classes .
+$JAVA_HOME/bin/jar -cvfm hbase-news.jar MANIFEST.MF -C build/classes .
 
 cp hbase-news.jar build/lib/
-echo "HBase code build success! Jar file: build/lib/hbase-news.jar"
+echo "Success! Jar file: build/lib/hbase-news.jar"

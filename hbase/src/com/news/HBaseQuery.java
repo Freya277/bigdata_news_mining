@@ -17,36 +17,64 @@ public class HBaseQuery {
         conf.set("hbase.zookeeper.property.clientPort", "2181");
 
         try (Connection conn = ConnectionFactory.createConnection(conf)) {
-            // 1. Query author influence (example: Lee Moran)
-            Table authorTable = conn.getTable(TableName.valueOf("news_author_influence"));
-            Get authorGet = new Get(Bytes.toBytes("Lee Moran"));
-            Result authorResult = authorTable.get(authorGet);
-            if (!authorResult.isEmpty()) {
-                double influence = Bytes.toDouble(authorResult.getValue(Bytes.toBytes("profile"), Bytes.toBytes("influence_score")));
-                System.out.println("Lee Moran's influence score: " + influence);
-            }
-
-            // 2. Query hot category (example: POLITICS)
-            Table categoryTable = conn.getTable(TableName.valueOf("news_category_hot"));
-            Get categoryGet = new Get(Bytes.toBytes("POLITICS"));
-            Result categoryResult = categoryTable.get(categoryGet);
-            if (!categoryResult.isEmpty()) {
-                int articleCount = Bytes.toInt(categoryResult.getValue(Bytes.toBytes("stats"), Bytes.toBytes("article_count")));
-                double hotScore = Bytes.toDouble(categoryResult.getValue(Bytes.toBytes("stats"), Bytes.toBytes("hot_score")));
-                System.out.println("POLITICS article count: " + articleCount + ", hot score: " + hotScore);
-            }
-
-            // 3. Query headline avg len (RowKey: total)
-            Table headlineTable = conn.getTable(TableName.valueOf("news_headline_stats"));
-            Get headlineGet = new Get(Bytes.toBytes("total"));
-            Result headlineResult = headlineTable.get(headlineGet);
-            if (!headlineResult.isEmpty()) {
-                double avgLen = Bytes.toDouble(headlineResult.getValue(Bytes.toBytes("metrics"), Bytes.toBytes("avg_headline_len")));
-                System.out.println("Total avg headline length: " + avgLen);
-            }
+        
+            queryAuthorInfluence(conn, "Lee Moran");
+       
+            queryHotCategory(conn, "POLITICS");
+         
+            queryYearlyStats(conn, "2022");
+       
+            queryAvgHeadlineLen(conn);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void queryAuthorInfluence(Connection conn, String author) throws Exception {
+        Table table = conn.getTable(TableName.valueOf("news_author_influence"));
+        Get get = new Get(Bytes.toBytes(author));
+        Result result = table.get(get);
+        if (!result.isEmpty()) {
+            double score = Bytes.toDouble(result.getValue(Bytes.toBytes("profile"), Bytes.toBytes("influence_score")));
+            System.out.println("Author " + author + "'s Influence Score: " + score);
+        } else {
+            System.out.println("No data found for author " + author);
+        }
+        table.close();
+    }
+
+    private static void queryHotCategory(Connection conn, String category) throws Exception {
+        Table table = conn.getTable(TableName.valueOf("news_category_hot"));
+        Get get = new Get(Bytes.toBytes(category));
+        Result result = table.get(get);
+        if (!result.isEmpty()) {
+            int count = Bytes.toInt(result.getValue(Bytes.toBytes("stats"), Bytes.toBytes("article_count")));
+            double hotScore = Bytes.toDouble(result.getValue(Bytes.toBytes("stats"), Bytes.toBytes("hot_score")));
+            System.out.println("Category " + category + " - Article Count: " + count + ", Hot Score: " + hotScore);
+        }
+        table.close();
+    }
+
+    private static void queryYearlyStats(Connection conn, String year) throws Exception {
+        Table table = conn.getTable(TableName.valueOf("news_yearly_stats"));
+        Get get = new Get(Bytes.toBytes(year));
+        Result result = table.get(get);
+        if (!result.isEmpty()) {
+            int count = Bytes.toInt(result.getValue(Bytes.toBytes("metrics"), Bytes.toBytes("news_count")));
+            System.out.println("News count for year " + year + ": " + count);
+        }
+        table.close();
+    }
+
+    private static void queryAvgHeadlineLen(Connection conn) throws Exception {
+        Table table = conn.getTable(TableName.valueOf("news_yearly_stats"));
+        Get get = new Get(Bytes.toBytes("total"));
+        Result result = table.get(get);
+        if (!result.isEmpty()) {
+            double avgLen = Bytes.toDouble(result.getValue(Bytes.toBytes("metrics"), Bytes.toBytes("avg_headline_len")));
+            System.out.println("Overall Average Headline Length: " + avgLen);
+        }
+        table.close();
     }
 }
