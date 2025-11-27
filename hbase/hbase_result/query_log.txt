@@ -1,0 +1,31 @@
+COLUMN  CELL
+ profile:influence_score timestamp=1764251651288, value=@\x9F\xEAz\xE1G\xAE\x14
+1 row(s) in 1.0320 seconds
+
+nil
+COLUMN  CELL
+ stats:article_count timestamp=1764251669028, value=\x00\x00\x8B\x11
+ stats:avg_headline_len timestamp=1764251669028, value=@P\x10\x1EBH\xED\xDF
+ stats:hot_score timestamp=1764251669028, value=@\xD6V\x933333
+3 row(s) in 0.0140 seconds
+
+nil
+COLUMN  CELL
+ metrics:news_count timestamp=1764251672071, value=\x00\x00\x05v
+1 row(s) in 0.1070 seconds
+
+nil
+COLUMN  CELL
+ metrics:avg_headline_len timestamp=1764251679488, value=@N\xADc\x98\x8ER\xC1
+1 row(s) in 0.0050 seconds
+
+nil
+ROW  COLUMN+CELL
+ #DoctorsSpeakOut, Contributor#DoctorsSpeakOut is a coalition of physicians seeking high qua... column=profile:influence_score, timestamp=1764251668559, value=?\xE3333333
+ 'The Koch Sisters', ContributorSo not related to those guys column=profile:influence_score, timestamp=1764251668558, value=?\xD5\x1E\xB8Q\xEB\x85\x1F
+ 10,000 Small Businesses Program, ContributorAn investment to help entrepreneurs create jobs and economic o... column=profile:influence_score, timestamp=1764251668557, value=?\xDA\xE1G\xAE\x14z\xE1
+ 1in20, ContributorVisual stories to destigmatize and educate on all issues of me... column=profile:influence_score, timestamp=1764251668556, value=?\xD8\xF5\xC2\x8F\x5C(\xF6
+ 24/7 Wall St., 24/7 Wall St. column=profile:influence_score, timestamp=1764251668555, value=@D\xAB\x85\x1E\xB8Q\xEB
+5 row(s) in 0.0320 seconds
+
+nil

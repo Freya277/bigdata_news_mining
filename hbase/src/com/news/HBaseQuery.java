@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 
 public class HBaseQuery {
     // Define the report output path
-    private static final String REPORT_PATH = "~/news-bigdata-project/hbase/hbase_result/query_report.txt";
+    private static final String REPORT_PATH = "/home/dolphin/news-bigdata-project/hbase/hbase_result/query_report.txt";
 
     public static void main(String[] args) {
         Configuration conf = HBaseConfiguration.create();

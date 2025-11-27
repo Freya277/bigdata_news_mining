@@ -1,0 +1,18 @@
+===== HBase Query Results (Readable Report) =====
+
+1. Author Influence Query (Lee Moran)
+Author: Lee Moran | Influence Score: 2042.62
+
+2. Hot News Category Query (POLITICS)
+Category: POLITICS
+  - Article Count: 35601
+  - Avg Headline Length: 64.25184685823432
+  - Hot Score: 22874.3
+
+3. Yearly News Count Query (2022)
+Year: 2022 | News Count: 1398
+
+4. Average Headline Length Query
+Overall Average Headline Length: 61.35460192632082 characters
+
+===== Query Complete =====
