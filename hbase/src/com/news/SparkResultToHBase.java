@@ -27,7 +27,7 @@ public class SparkResultToHBase {
         hbaseConf.set("hbase.zookeeper.property.clientPort", "2181");
 
         // 1. Read author influence from HDFS (Spark output)
-        String authorPath = "hdfs://localhost:9000/spark_output/author_influence";
+        String authorPath = "hdfs://localhost:8020/spark_output/author_influence";
         JavaRDD<String> authorRDD = sc.textFile(authorPath);
         authorRDD.foreachPartition(partition -> {
             try (Connection conn = ConnectionFactory.createConnection(hbaseConf);
@@ -50,7 +50,7 @@ public class SparkResultToHBase {
         });
 
         // 2. Read hot category from HDFS (Spark output)
-        String categoryPath = "hdfs://localhost:9000/spark_output/hot_categories";
+        String categoryPath = "hdfs://localhost:8020/spark_output/hot_categories";
         JavaRDD<String> categoryRDD = sc.textFile(categoryPath);
         categoryRDD.foreachPartition(partition -> {
             try (Connection conn = ConnectionFactory.createConnection(hbaseConf);

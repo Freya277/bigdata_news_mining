@@ -24,7 +24,7 @@ public class HiveResultToHBase {
         hbaseConf.set("hbase.zookeeper.property.clientPort", "2181");
 
         // 1. Read yearly count from HDFS (Hive output)
-        String yearlyPath = "hdfs://localhost:9000/hive_output/yearly_count";
+        String yearlyPath = "hdfs://localhost:8020/hive_output/yearly_count";
         JavaRDD<String> yearlyRDD = sc.textFile(yearlyPath);
         yearlyRDD.foreachPartition(partition -> {
             try (Connection conn = ConnectionFactory.createConnection(hbaseConf);
@@ -46,7 +46,7 @@ public class HiveResultToHBase {
         });
 
         // 2. Read headline avg len from HDFS (Hive output)
-        String avgLenPath = "hdfs://localhost:9000/hive_output/headline_avglen";
+        String avgLenPath = "hdfs://localhost:8020/hive_output/headline_avglen";
         JavaRDD<String> avgLenRDD = sc.textFile(avgLenPath);
         double avgLen = Double.parseDouble(avgLenRDD.collect().get(0));
 
